@@ -1,9 +1,25 @@
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
+import database, { notesCollection } from '@/src/db'
 
 export default function index() {
+    const [title,setTitle]= useState('')
+    const [description,setDescription]= useState('')
+
+    const addNote=async()=>{
+        console.warn('addnote', title, description)
+        await database.write(async()=>{
+            await notesCollection.create((noteoption)=>{
+                noteoption.note=title
+                noteoption.description=description
+            })
+        })
+    }
+    const updateNote=()=>{}
+    const deleteNote=()=>{}
+    
   return (
     <SafeAreaView style={{flex:1}}>
     <View>
@@ -12,15 +28,16 @@ export default function index() {
                 Add new note
             </Text>
 
-            <TextInput placeholder='Enter note title' style={styles.input}/>
-            <TextInput placeholder='Enter note description' style={styles.input}/>
+            <TextInput placeholder='Enter note title' value={title} onChangeText={setTitle} style={styles.input}/>
+            <TextInput placeholder='Enter note description' value={description} onChangeText={setDescription} style={styles.input}/>
         </View>
-      <Button title='Add new note' onPress={()=>{router.push('/note')}}/>
+      <Button title='Add new note' onPress={()=>{addNote()}}/>
       <Button title='Cancel' onPress={()=>{}}/>
     </View>
     </SafeAreaView>
   )
 }
+
 
 
 const styles= StyleSheet.create({

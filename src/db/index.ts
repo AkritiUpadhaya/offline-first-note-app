@@ -31,3 +31,5 @@ const database = new Database({
     // Post, // ⬅️ You'll add Models to Watermelon here
   ],
 })
+export default database;
+ export const notesCollection= database.get<Note>('notes')
